@@ -9,6 +9,8 @@ using BlogHeadless.Api.Models;
 using BlogHeadless.Api.Models.Context;
 using BlogHeadless.Api.Models.Ids;
 using BlogHeadless.Data.Models.Author;
+using AutoMapper;
+using BlogHeadless.Data.Dtos;
 
 namespace BlogHeadless.Controllers
 {
@@ -17,31 +19,35 @@ namespace BlogHeadless.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly BlogDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AuthorsController(BlogDbContext context)
+        public AuthorsController(BlogDbContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Authors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<AuthorDto>>> GetAuthors()
         {
-            return await _context.Authors.ToListAsync();
+            var authors=await _context.Authors.ToListAsync();
+            return _mapper.Map<List<AuthorDto>>(authors);
         }
 
         // GET: api/Authors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(Guid id)
+        public async Task<ActionResult<AuthorDto>> GetAuthor(Guid id)
         {
             var author = await _context.Authors.FindAsync(new AuthorId(id));
-
             if (author == null)
             {
                 return NotFound();
             }
 
-            return author;
+            var authorDto = _mapper.Map<AuthorDto>(author);
+
+            return authorDto;
         }
 
       
@@ -49,7 +55,7 @@ namespace BlogHeadless.Controllers
         // POST: api/Authors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Author>> PostAuthor(PostAuthorRequest authorRequest)
+        public async Task<ActionResult<AuthorDto>> PostAuthor(PostAuthorRequest authorRequest)
         {
             AuthorId id = new AuthorId();
             AuthorName authorName = new AuthorName(authorRequest.Name);
@@ -76,7 +82,7 @@ namespace BlogHeadless.Controllers
                 }
             }
 
-            return CreatedAtAction("GetAuthor", new { id = author.Id }, author);
+            return _mapper.Map<AuthorDto>(author);
         }
 
         // DELETE: api/Authors/5
