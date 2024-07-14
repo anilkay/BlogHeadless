@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlogHeadless.Api.Models;
 
-namespace BlogHeadless.Api.Models
+namespace BlogHeadless.Data.Models.BlogPost
 {
-    public  class BlogHeader: AbstractStringField
+    public class BlogPostHeader : AbstractStringField
     {
 
-        public BlogHeader(string value)
+        public BlogPostHeader(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
                 throw new ArgumentException("BlogHeader can't be null or empty");
             }
 
-             Value = value.Trim();
+            Value = value.Trim();
 
             if (value.Length < 5)
             {
@@ -26,7 +27,7 @@ namespace BlogHeadless.Api.Models
             Value = value;
         }
 
-      
+
 
     }
 }

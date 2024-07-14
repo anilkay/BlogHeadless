@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BlogHeadless.Api.Models;
 using BlogHeadless.Api.Models.Context;
 using BlogHeadless.Api.Models.Ids;
+using BlogHeadless.Data.Models.Author;
 
 namespace BlogHeadless.Controllers
 {

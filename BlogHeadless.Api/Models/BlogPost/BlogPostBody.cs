@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlogHeadless.Api.Models
+namespace BlogHeadless.Data.Models.BlogPost
 {
-    public  class BlogBody
+    public class BlogPostBody
     {
         public string Value { get; private set; }
 
-        public BlogBody(string value)
+        public BlogPostBody(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -19,7 +19,7 @@ namespace BlogHeadless.Api.Models
 
             Value = value.Trim();
 
-            if(value.Length < 50) 
+            if (value.Length < 50)
             {
                 throw new ArgumentException("BlogBody has at least 50 character");
             }

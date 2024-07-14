@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BlogHeadless.Api.Models;
 using BlogHeadless.Api.Models.Context;
 using BlogHeadless.Api.Models.Ids;
+using BlogHeadless.Data.Models.BlogPost;
 
 namespace BlogHeadless.Controllers
 {
@@ -51,8 +51,8 @@ namespace BlogHeadless.Controllers
         {
 
             BlogPostId blogPostId = new BlogPostId();
-            BlogBody blogBody = new BlogBody(postBlogPost.BlogBody);
-            BlogHeader blogHeader = new BlogHeader(postBlogPost.BLogHeader);
+            BlogPostBody blogBody = new BlogPostBody(postBlogPost.BlogBody);
+            BlogPostHeader blogHeader = new BlogPostHeader(postBlogPost.BLogHeader);
             AuthorId authorId = new AuthorId(postBlogPost.AuthorId);
 
             var author = await _context.Authors.FindAsync(authorId);

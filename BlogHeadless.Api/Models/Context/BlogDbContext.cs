@@ -1,4 +1,6 @@
 ﻿using BlogHeadless.Api.Models.Ids;
+using BlogHeadless.Data.Models.Author;
+using BlogHeadless.Data.Models.BlogPost;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -29,13 +31,13 @@ namespace BlogHeadless.Api.Models.Context
             modelBuilder.Entity<BlogPost>()
                 .Property(x => x.BlogBody)
                 .HasConversion(blogbody => blogbody.Value,
-                value => new BlogBody(value)
+                value => new BlogPostBody(value)
                 );
 
             modelBuilder.Entity<BlogPost>()
                 .Property(x => x.BlogHeader)
                 .HasConversion(blogHeader => blogHeader.Value, 
-                value => new BlogHeader(value));
+                value => new BlogPostHeader(value));
 
             modelBuilder.Entity<Author>()
                 .Property(x => x.Id)
