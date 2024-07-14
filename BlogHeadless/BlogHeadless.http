@@ -1,0 +1,6 @@
+@BlogHeadless_HostAddress = http://localhost:5252
+
+GET {{BlogHeadless_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
