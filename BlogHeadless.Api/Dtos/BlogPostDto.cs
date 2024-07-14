@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BlogHeadless.Data.Dtos
 {
-    public  record BlogPostDto(string Id,string BlogHeader,string BlogBody);
+    public  record BlogPostDto(string Id,string BlogHeader,string BlogBody,AuthorDto Author);
     public record AuthorDto(string Id, string Name, string Email);
 
     public class BlogPostProfie:Profile
@@ -20,7 +20,8 @@ namespace BlogHeadless.Data.Dtos
             CreateMap<BlogPost, BlogPostDto>()
                .ForMember(dto => dto.Id, opt => opt.MapFrom(src => src.Id.Value.ToString()))
                .ForMember(dto => dto.BlogHeader, opt => opt.MapFrom(src => src.BlogHeader.Value))
-               .ForMember(dto => dto.BlogBody, opt => opt.MapFrom(src => src.BlogBody));
+               .ForMember(dto => dto.BlogBody, opt => opt.MapFrom(src => src.BlogBody))
+               .ForMember(dto => dto.Author, opt => opt.MapFrom(src => src.Author));
         }
 
     }

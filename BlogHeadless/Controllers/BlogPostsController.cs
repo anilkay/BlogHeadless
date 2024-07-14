@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using BlogHeadless.Api.Models.Context;
 using BlogHeadless.Api.Models.Ids;
 using BlogHeadless.Data.Models.BlogPost;
+using AutoMapper;
+using BlogHeadless.Data.Dtos;
 
 namespace BlogHeadless.Controllers
 {
@@ -16,38 +18,44 @@ namespace BlogHeadless.Controllers
     public class BlogPostsController : ControllerBase
     {
         private readonly BlogDbContext _context;
+        private readonly IMapper _mapper;
 
-        public BlogPostsController(BlogDbContext context)
+        public BlogPostsController(BlogDbContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/BlogPosts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BlogPost>>> GetBlogPosts()
+        public async Task<ActionResult<IEnumerable<BlogPostDto>>> GetBlogPosts()
         {
-            return await _context.BlogPosts.ToListAsync();
+            var blogPosts=await _context.BlogPosts.Include(blog=>blog.Author).ToListAsync();
+            return _mapper.Map<List<BlogPostDto>>(blogPosts);
         }
 
         // GET: api/BlogPosts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BlogPost>> GetBlogPost(Guid id)
+        public async Task<ActionResult<BlogPostDto>> GetBlogPost(Guid id)
         {
-            var blogPost = await _context.BlogPosts.FindAsync(new BlogPostId(id));
+            var blogPost = await _context.BlogPosts.Include(blog => blog.Author).Where(blog => blog.Id == new BlogPostId(id)).FirstOrDefaultAsync();
+
 
             if (blogPost == null)
             {
                 return NotFound();
             }
 
-            return blogPost;
+           var blogPostDto= _mapper.Map<BlogPostDto>(blogPost);
+
+            return blogPostDto;
         }
 
        
         // POST: api/BlogPosts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BlogPost>> PostBlogPost(PostBlogPostRequest postBlogPost)
+        public async Task<ActionResult<BlogPostDto>> PostBlogPost(PostBlogPostRequest postBlogPost)
         {
 
             BlogPostId blogPostId = new BlogPostId();
@@ -77,7 +85,7 @@ namespace BlogHeadless.Controllers
                 }
             }
 
-            return CreatedAtAction("GetBlogPost", new { id = blogPost.Id }, blogPost);
+            return _mapper.Map<BlogPostDto>(blogPost);
         }
 
         // DELETE: api/BlogPosts/5

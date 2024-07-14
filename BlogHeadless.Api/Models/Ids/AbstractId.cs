@@ -33,9 +33,18 @@ namespace BlogHeadless.Api.Models.Ids
                 return false;
             }
 
-            Guid controlId = (Guid)obj;
+            try
+            {
+                Guid controlId = (Guid)obj;
 
-            return Value.Equals(controlId);
+                return Value.Equals(controlId);
+            }
+            catch
+            {
+                var abstractId=(AbstractId)obj;
+                return Value.Equals(abstractId.Value);
+            }
+  
         }
 
         public override int GetHashCode()
