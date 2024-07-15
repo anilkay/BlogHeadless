@@ -30,6 +30,11 @@ namespace BlogHeadless.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BlogPostDto>>> GetBlogPosts()
         {
+           
+                _mapper.ConfigurationProvider.AssertConfigurationIsValid();
+            
+           
+            
             var blogPosts=await _context.BlogPosts.Include(blog=>blog.Author).ToListAsync();
             return _mapper.Map<List<BlogPostDto>>(blogPosts);
         }
@@ -62,11 +67,12 @@ namespace BlogHeadless.Controllers
             BlogPostBody blogBody = new BlogPostBody(postBlogPost.BlogBody);
             BlogPostHeader blogHeader = new BlogPostHeader(postBlogPost.BLogHeader);
             AuthorId authorId = new AuthorId(postBlogPost.AuthorId);
+            BlogPostTags blogPostTags = new BlogPostTags(postBlogPost.Tags);
 
             var author = await _context.Authors.FindAsync(authorId);
 
 
-            BlogPost blogPost = new BlogPost { Id=blogPostId,BlogHeader = blogHeader, BlogBody = blogBody, Author = author };
+            BlogPost blogPost = new BlogPost { Id=blogPostId,BlogHeader = blogHeader, BlogBody = blogBody, Author = author, blogPostTags=blogPostTags };
 
             _context.BlogPosts.Add(blogPost);
             try
@@ -109,5 +115,5 @@ namespace BlogHeadless.Controllers
             return _context.BlogPosts.Any(e => e.Id == id);
         }
     }
-    public record PostBlogPostRequest(string BlogBody, string BLogHeader, Guid AuthorId);
+    public record PostBlogPostRequest(string BlogBody, string BLogHeader, Guid AuthorId,List<string> Tags);
 }

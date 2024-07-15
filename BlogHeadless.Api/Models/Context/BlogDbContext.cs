@@ -39,6 +39,11 @@ namespace BlogHeadless.Api.Models.Context
                 .HasConversion(blogHeader => blogHeader.Value, 
                 value => new BlogPostHeader(value));
 
+            modelBuilder.Entity<BlogPost>()
+             .Property(x => x.blogPostTags)
+             .HasConversion(blogHeader => blogHeader.Value,
+             value => new BlogPostTags(value));
+
             modelBuilder.Entity<Author>()
                 .Property(x => x.Id)
                 .HasConversion(id => id.Value,
@@ -56,6 +61,8 @@ namespace BlogHeadless.Api.Models.Context
                .HasConversion(name => name.Value,
                value => new AuthorName(value)
                );
+
+          
 
         }
 
