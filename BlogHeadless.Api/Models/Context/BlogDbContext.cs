@@ -1,7 +1,9 @@
 ﻿using BlogHeadless.Api.Models.Ids;
 using BlogHeadless.Data.Models.Author;
 using BlogHeadless.Data.Models.BlogPost;
+using BlogHeadless.Data.Models.Subscriber;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BlogHeadless.Api.Models.Context
 {
-    public class BlogDbContext: DbContext
+    public class BlogDbContext : DbContext
     {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,7 +38,7 @@ namespace BlogHeadless.Api.Models.Context
 
             modelBuilder.Entity<BlogPost>()
                 .Property(x => x.BlogHeader)
-                .HasConversion(blogHeader => blogHeader.Value, 
+                .HasConversion(blogHeader => blogHeader.Value,
                 value => new BlogPostHeader(value));
 
             modelBuilder.Entity<BlogPost>()
@@ -62,7 +64,16 @@ namespace BlogHeadless.Api.Models.Context
                value => new AuthorName(value)
                );
 
-          
+            modelBuilder.Entity<Subscriber>()
+                .Property(x => x.Id)
+                .HasConversion(new UlidStringConverter())
+                .HasMaxLength(26);
+
+            modelBuilder.Entity<Subscriber>()
+               .Property(x => x.Email)
+               .HasConversion(email => email.Value,
+               value => new Email(value)
+               );
 
         }
 
@@ -72,5 +83,21 @@ namespace BlogHeadless.Api.Models.Context
 
         public DbSet<Author> Authors { get; set; }
 
+        public DbSet<Subscriber> subscribers { get; set; }
+
+
     }
+
+    public class UlidStringConverter : ValueConverter<Ulid, string>
+    {
+        public UlidStringConverter()
+            : base(
+               ulid => ulid.ToString(),
+               asString => Ulid.Parse(asString)
+               )
+        { }
+
+    }
+
+
 }

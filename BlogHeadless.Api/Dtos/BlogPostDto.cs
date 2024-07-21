@@ -2,6 +2,7 @@
 using BlogHeadless.Api.Models.Ids;
 using BlogHeadless.Data.Models.Author;
 using BlogHeadless.Data.Models.BlogPost;
+using BlogHeadless.Data.Models.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,18 @@ namespace BlogHeadless.Data.Dtos
 
     public record AuthorDto(string Id, string Name, string Email);
 
+    public class SubsCriberDto
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string SubscriptionMethod { get; set; }
+    
+        public SubsCriberDto()
+        {
+
+        }
+    }
+
     public class BlogPostProfie:Profile
     {
         public BlogPostProfie()
@@ -83,6 +96,18 @@ namespace BlogHeadless.Data.Dtos
                 .ForMember(dto => dto.Id, opt => opt.MapFrom(src => src.Id.Value.ToString()))
                 .ForMember(dto => dto.Name, opt => opt.MapFrom(src => src.Name.Value))
                 .ForMember(dto => dto.Email, opt => opt.MapFrom(src => src.Email.Value));
+        }
+    }
+
+    public class SubscriberProfile:Profile
+    {
+        public SubscriberProfile()
+        {
+            CreateMap<Subscriber, SubsCriberDto>()
+                .ForMember(dto => dto.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ForMember(dto=>dto.Email,opt=>opt.MapFrom(src=>src.Email.Value))
+                .ForMember(dto=>dto.SubscriptionMethod,opt=>opt.MapFrom(src=>src.SubsriptionSource.ToString()))
+                ;
         }
     }
     

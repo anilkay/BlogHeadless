@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BlogDbContext>();
 
-builder.Services.AddAutoMapper(typeof(AuthorProfile), typeof(BlogPostProfie));
+builder.Services.AddAutoMapper(typeof(AuthorProfile), typeof(BlogPostProfie),typeof(SubscriberProfile));
 
 var app = builder.Build();
 
